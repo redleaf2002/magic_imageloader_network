@@ -59,7 +59,7 @@ Image cache in memory and disk
      ```
   #### customize a load mode:
    Firstly instantiate the DownloadStream
-   ```java
+   ```Java
       private void customizeLoader(){
           Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
           @Override
