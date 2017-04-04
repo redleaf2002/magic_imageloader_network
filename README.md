@@ -97,7 +97,8 @@ Image cache in memory and disk
     .into(null);
     ```
      
-    ### 2.for network request with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
+   ### 2.for network request 
+   with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
     #### get:
     ```java
@@ -159,4 +160,3 @@ Image cache in memory and disk
     Magic.with(MainActivity.this).addRequest(mRequest);
    }
    ```
-    
