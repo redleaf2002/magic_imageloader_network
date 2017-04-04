@@ -35,9 +35,9 @@ Image cache in memory and disk
     Magic.with(MainActivity.this).loadImage(videoUrl,ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)     .into(mImageVie
  
 
-   #### With the listener
+  #### With the listener
      onLoadListener
-    ```Java
+   ```Java
       private void load(Context mContext, ImageView imageView, String url) {
            Magic.with(mContext).loadImage(url,ImageType.HTTP).addListener(new OnLoadListener() {
                @Override
@@ -58,7 +58,7 @@ Image cache in memory and disk
        }
     ```
      
-   #### customize a load mode:
+  #### customize a load mode:
       Firstly instantiate the DownloadStream
     ```java
       private void customizeLoader(){
@@ -79,7 +79,7 @@ Image cache in memory and disk
       } 
     ```
  
-   ### AsyncImage loading
+  ### AsyncImage loading
       very easy :
     ```Java 
       private void asyncLoad(){
@@ -104,7 +104,7 @@ Image cache in memory and disk
       }
    ```
      
-  ### 2.for network request 
+### 2.for network request 
    with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
    #### get:
