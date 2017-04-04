@@ -36,8 +36,8 @@ Image cache in memory and disk
  
 
   #### With the listener
-    onLoadListener
-    ```Java
+   onLoadListener
+   ```Java
       private void load(Context mContext, ImageView imageView, String url) {
            Magic.with(mContext).loadImage(url,ImageType.HTTP).addListener(new OnLoadListener() {
                @Override
@@ -55,8 +55,8 @@ Image cache in memory and disk
                    Log.d(TAG, "onLoadFailed");
                }
            }).into(imageView);
-       }
-     ```
+      }
+   ```
   #### customize a load mode:
    Firstly instantiate the DownloadStream
    ```Java
