@@ -30,14 +30,15 @@ Image cache in memory and disk
     have 3 thumbnails:MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
                      MediaStore.Images.Thumbnails.MICRO_KIND
                      MediaStore.Images.Thumbnails.MINI_KIND
-    ```java
+    
     String videoUrl = "/storage/emulated/0/DCIM/Camera/VID_20160711_113933.mp4";
-    Magic.with(MainActivity.this).loadImage(videoUrl,        ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND).into(mImageVie
-    ```
+    Magic.with(MainActivity.this).loadImage(videoUrl,ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)     .into(mImageVie
+ 
 
    #### With the listener
    ```java
-   Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
+   private void load(){
+      Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
                     @Override
                     public void onLoadStarted(String url) {
                         Log.d(TAG, "onLoadStarted");
@@ -53,31 +54,34 @@ Image cache in memory and disk
                         Log.d(TAG, "onLoadFailed");
                     }
                 }).into(mView);
-     
-     ```
+   }
+   ```
      #### customize a load mode:
      ```java
-     Firstly instantiate the DownloadStream
-     Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
-      @Override
-     public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
-        try {
-            return new FileInputStream(new File(imageDownloadInfo.getImageUrl()));
-        } catch (FileNotFoundException e) {
-        }
-        return null;
-       }
-     });
-     
-     //And then:
-     String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
-     Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
+     private void customizeLoader(){
+        //Firstly instantiate the DownloadStream
+        Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
+         @Override
+        public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
+           try {
+               return new FileInputStream(new File(imageDownloadInfo.getImageUrl()));
+           } catch (FileNotFoundException e) {
+           }
+           return null;
+          }
+        });
+
+        //And then:
+        String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
+        Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
+     }   
      ```
     ### AsyncImage loading
     very easy :
      ```java 
-     String url = "http://images.all-freedownload.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
-     Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
+     private void asyncLoad(){
+       String url ="http://images.allfreedownload.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
+       Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
                     @Override
                     public void onLoadStarted(String url) {
                         Log.d(TAG, "onLoadStarted");
@@ -93,8 +97,8 @@ Image cache in memory and disk
                         Log.d(TAG, "onLoadFailed");
                     }
                 }).into();
-     //or
-    .into(null);
+     //or   .into(null);
+     }
     ```
      
    ### 2.for network request 
@@ -158,5 +162,5 @@ Image cache in memory and disk
         }
     };
     Magic.with(MainActivity.this).addRequest(mRequest);
-   }
+    }
    ```
