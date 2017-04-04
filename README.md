@@ -37,7 +37,7 @@ Image cache in memory and disk
 
    #### With the listener
      onLoadListener
-     ```Java
+    ```Java
       private void load(Context mContext, ImageView imageView, String url) {
            Magic.with(mContext).loadImage(url,ImageType.HTTP).addListener(new OnLoadListener() {
                @Override
@@ -56,11 +56,11 @@ Image cache in memory and disk
                }
            }).into(imageView);
        }
-     ```
+    ```
      
    #### customize a load mode:
       Firstly instantiate the DownloadStream
-     ```java
+    ```java
       private void customizeLoader(){
         Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
          @Override
@@ -77,11 +77,11 @@ Image cache in memory and disk
         String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
         Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
       } 
-     ```
+    ```
  
    ### AsyncImage loading
       very easy :
-     ```Java 
+    ```Java 
       private void asyncLoad(){
        String url ="http://images.allfreedownload.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
        Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
@@ -102,7 +102,7 @@ Image cache in memory and disk
                 }).into();
         //or   .into(null);
       }
-    ```
+   ```
      
   ### 2.for network request 
    with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
