@@ -27,7 +27,7 @@ Image cache in memory and disk
     Magic.with(MainActivity.this).loadImage("beautiful_natural.jpg", ImageType.ASSETS).into(mImageView);
    
     #### VIDEO thumbnail:
-    have 3 thumbnails:MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
+    have 3 mode:     MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
                      MediaStore.Images.Thumbnails.MICRO_KIND
                      MediaStore.Images.Thumbnails.MINI_KIND
     
@@ -36,9 +36,10 @@ Image cache in memory and disk
  
 
    #### With the listener
+   onLoadListener
    ```java
    private void load(){
-      Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
+       Magic.with(mContext).loadImage(url).addListener(new OnLoadListener() {
                     @Override
                     public void onLoadStarted(String url) {
                         Log.d(TAG, "onLoadStarted");
@@ -54,12 +55,12 @@ Image cache in memory and disk
                         Log.d(TAG, "onLoadFailed");
                     }
                 }).into(mView);
-   }
-   ```
+     }
+     ```
      #### customize a load mode:
+     Firstly instantiate the DownloadStream
      ```java
      private void customizeLoader(){
-        //Firstly instantiate the DownloadStream
         Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
          @Override
         public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
