@@ -58,10 +58,10 @@ Image cache in memory and disk
        }
    ```
      
-   #### customize a load mode:
-     Firstly instantiate the DownloadStream
-   ```java
-     private void customizeLoader(){
+    #### customize a load mode:
+      Firstly instantiate the DownloadStream
+     ```java
+      private void customizeLoader(){
         Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
          @Override
         public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
@@ -76,10 +76,10 @@ Image cache in memory and disk
         //And then:
         String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
         Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
-     } 
-    ```
+      } 
+     ```
  
-    ### AsyncImage loading
+   ### AsyncImage loading
     very easy :
     ```Java 
      private void asyncLoad(){
@@ -104,7 +104,7 @@ Image cache in memory and disk
      }
     ```
      
-   ### 2.for network request 
+  ### 2.for network request 
    with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
    #### get:
