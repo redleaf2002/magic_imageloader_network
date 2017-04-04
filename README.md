@@ -5,26 +5,26 @@ For loading image ,it supports http, drawable, assets,video thumbnail and local 
 For network request , it provides JsonObjectRequest JsonArrayRequest StringRequest InputstreamRequest.
 
 
-Usage:
+## Usage:
    
-   1.for Imageloader
+   ### 1.for Imageloader
     ImageType:  HTTP FILE DRAWABLE ASSETS VIDEO
   
-    HTTP:
+    #### HTTP:
     String url = "http://images.all-free-download.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
     Magic.with(MainActivity.this).loadImage(url, ImageType.HTTP).into(mImageView);
     
-    FILE:
+    #### FILE:
     String filePath = "/storage/emulated/0/gnowwp/resized/london_night.png";
     Magic.with(MainActivity.this).loadImage(filePath, ImageType.FILE).into(mImageView);
 
-    DRAWABLE:
+    #### DRAWABLE:
     Magic.with(MainActivity.this).loadImage(R.drawable.beautiful_natural).into(mImageView);
 
-    ASSETS:
+    #### ASSETS:
     Magic.with(MainActivity.this).loadImage("beautiful_natural.jpg", ImageType.ASSETS).into(mImageView);
    
-    VIDEO thumbnail:
+    #### VIDEO thumbnail:
     have 3 thumbnails:MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
                      MediaStore.Images.Thumbnails.MICRO_KIND
                      MediaStore.Images.Thumbnails.MINI_KIND
@@ -32,7 +32,7 @@ Usage:
     Magic.with(MainActivity.this).loadImage(videoUrl,        ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND).into(mImageVie
 
 
-   With the listener
+   #### With the listener
    
    Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
                     @Override
@@ -52,9 +52,9 @@ Usage:
                 }).into(mView);
      
      
-     customize a load mode:
+     #### customize a load mode:
+     ```java
      Firstly instantiate the DownloadStream
-     
      Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
       @Override
      public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
@@ -66,17 +66,18 @@ Usage:
        }
      });
      
-     And then:
+     //And then:
      String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
      Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
-                
-    2.for network request with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
+     ```
+    ### 2.for network request with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
-    get:
+    #### get:
     
+    ```java
     private void beginRequest() {
         String url = "url...";
-        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()                    {
+        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()                     {
             @Override
             public void onResponse(JSONObject var1) {
                 if (var1 != null) {
@@ -100,9 +101,10 @@ Usage:
         };
         Magic.with(MainActivity.this).addRequest(mRequest);
     }
+    ```
     
-    Post:
-    
+    #### Post:
+    ```java
     private void beginPostRequest() {
       String requestBody = "requestbody";
       JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.POST, url, requestBody, new   Response.Listener<JSONObject>() {
@@ -128,6 +130,7 @@ Usage:
     };
     Magic.with(MainActivity.this).addRequest(mRequest);
    }
+   ```
     
     
     
