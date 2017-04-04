@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import com.leaf.magic.image.MagicEngine;
 import com.leaf.magic.image.aware.ImageAware;
 import com.leaf.magic.image.dowload.ImageDownloadInfo;
-import com.leaf.magic.image.listener.LoadListener;
+import com.leaf.magic.image.listener.OnLoadListener;
 
 /**
  * @author: Hong
@@ -15,7 +15,7 @@ import com.leaf.magic.image.listener.LoadListener;
 public class DisplayBitmapTask implements Runnable {
     private ImageAware mImageAware;
     private Bitmap bitmap;
-    private LoadListener mLoadListener;
+    private OnLoadListener mLoadListener;
     private ImageDownloadInfo imageDownloadInfo;
 
     public DisplayBitmapTask(Bitmap bitmap, ImageDownloadInfo imageDownloadInfo) {

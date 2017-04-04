@@ -1,6 +1,7 @@
 package com.leaf.magicnetwork;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.leaf.magic.Magic;
-import com.leaf.magic.image.listener.LoadListener;
+import com.leaf.magic.image.listener.ImageType;
+import com.leaf.magic.image.listener.OnLoadListener;
 import com.leaf.magic.request.Request;
 import com.leaf.magic.request.Response;
 import com.leaf.magic.request.factory.JsonObjectRequest;
@@ -33,7 +35,9 @@ public class MainActivity extends Activity {
         imageBnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Magic.with(MainActivity.this).loadImage(url).addListener(new LoadListener() {
+
+
+                Magic.with(MainActivity.this).loadImage(url, ImageType.HTTP).addListener(new OnLoadListener() {
                     @Override
                     public void onLoadStarted(String url) {
                         Log.d(TAG, "onLoadStarted");
@@ -61,29 +65,54 @@ public class MainActivity extends Activity {
     }
 
     private void beginRequest() {
-        String url = "url...";
-        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        String requestUrl = "";
+        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, requestUrl, null, new Response.Listener<JSONObject>() {
+
             @Override
-            public void onResponse(JSONObject var1) {
-                if (var1 != null) {
-                    Log.d(TAG, "response:" + var1.toString());
+            public void onResponse(JSONObject object) {
+
+            }
+        }, new Response.ErrorResponse<String>() {
+
+            @Override
+            public void onErrorResponse(String s) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getHeaders() {
+                Map<String, String> map = new HashMap<>();
+                map.put("info", "1|zh|CN|19|");
+                return map;
+            }
+        };
+        Magic.with(MainActivity.this).addRequest(mRequest);
+    }
+
+    private void beginPostRequest() {
+        String requestBody = "requestbody";
+        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.POST, url, requestBody, new Response.Listener<JSONObject>() {
+            public void onResponse(JSONObject object) {
+                if (object != null) {
+                    Log.d(TAG, "response:" + object.toString());
                 } else {
                     Log.d(TAG, "response is null");
                 }
             }
         }, new Response.ErrorResponse<String>() {
             @Override
-            public void onErrorResponse(String var1) {
-                Log.d(TAG, "onErrorResponse is " + var1);
+            public void onErrorResponse(String s) {
+                Log.d(TAG, "onErrorResponse is " + s);
             }
         }) {
             @Override
             protected Map<String, String> getHeaders() {
                 Map<String, String> map = new HashMap<>();
-                map.put("key","value");
+                map.put("info", "1|zh|CN|19|");
                 return map;
             }
         };
         Magic.with(MainActivity.this).addRequest(mRequest);
     }
+
 }

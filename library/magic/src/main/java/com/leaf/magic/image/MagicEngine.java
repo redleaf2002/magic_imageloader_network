@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 import android.util.Log;
 
 
@@ -13,11 +12,11 @@ import com.leaf.magic.image.cache.DiskManager;
 import com.leaf.magic.image.cache.ImageCache;
 import com.leaf.magic.image.dowload.BaseDecodeStream;
 import com.leaf.magic.image.dowload.ImageDownloadInfo;
-import com.leaf.magic.image.dowload.ImageDownloader;
-import com.leaf.magic.image.dowload.factory.DownloadUtils;
+import com.leaf.magic.image.dowload.DownloadStream;
+import com.leaf.magic.image.dowload.factory.DownloadFactory;
 import com.leaf.magic.image.listener.ImageType;
-import com.leaf.magic.image.listener.LoadListener;
-import com.leaf.magic.image.listener.LoadedFrom;
+import com.leaf.magic.image.listener.OnLoadListener;
+import com.leaf.magic.image.listener.LoadForm;
 import com.leaf.magic.image.task.DisplayBitmapTask;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,38 +47,44 @@ public class MagicEngine {
     }
 
     public void tryDisplayImage(ImageDownloadInfo imageDownloadInfo) {
-        if (DEBUG) {
-            Log.d(TAG, "displayImage url:" + imageDownloadInfo.getImageUrl());
-        }
-        LoadListener mListener = imageDownloadInfo.getLoadListener();
-        if (mListener != null) {
-            mListener.onLoadStarted(imageDownloadInfo.getImageUrl());
-        }
-        if (TextUtils.isEmpty(imageDownloadInfo.getImageUrl()) || imageDownloadInfo.getImageAware() == null) {
-            if (mListener != null) {
-                mListener.onLoadFailed("url is empty");
-            }
+
+        if (isExistedInMemory(imageDownloadInfo)) {
             return;
         }
-        Bitmap btp = (Bitmap) mImageCache.get(imageDownloadInfo.getImageUrl());
+        if (imageDownloadInfo.getImageAware() != null) {
+            imageDownloadInfo.getImageAware().setImageResource(imageDownloadInfo.getLoadingImageRes());
+            imageDownloadInfo.getImageAware().getWrappedView().setTag(imageDownloadInfo.getMemoryCacheKey());
+        }
+        magic.executeInThread(new RequestBitmapTask(getLock(imageDownloadInfo), imageDownloadInfo));
+    }
+
+    private boolean isExistedInMemory(ImageDownloadInfo imageDownloadInfo) {
+
+        OnLoadListener mListener = imageDownloadInfo.getLoadListener();
+        Bitmap btp = (Bitmap) mImageCache.get(imageDownloadInfo.getMemoryCacheKey());
         if (btp != null) {
-            if (DEBUG) {
-                Log.d(TAG, "bitmap from memory cache.");
-            }
             if (mListener != null) {
+                if (DEBUG) {
+                    Log.d(TAG, "bitmap from memory cache.");
+                }
                 mListener.onLoadSucessed(btp, imageDownloadInfo.getImageUrl());
             }
-            imageDownloadInfo.getImageAware().setImageBitmap(btp);
-            return;
+            if (imageDownloadInfo.getImageAware() != null) {
+                imageDownloadInfo.getImageAware().setImageBitmap(btp);
+                return true;
+            }
+
         }
-        imageDownloadInfo.getImageAware().setImageResource(imageDownloadInfo.getLoadingImageRes());
-        imageDownloadInfo.getImageAware().getWrappedView().setTag(imageDownloadInfo.getMemoryCacheKey());
+        return false;
+    }
+
+    private Lock getLock(ImageDownloadInfo imageDownloadInfo) {
         Lock lock = mLock.get(imageDownloadInfo.getMemoryCacheKey());
         if (lock == null) {
             lock = new ReentrantLock();
             mLock.put(imageDownloadInfo.getMemoryCacheKey(), lock);
         }
-        magic.executeInThread(new RequestBitmapTask(lock, imageDownloadInfo));
+        return lock;
     }
 
     private class RequestBitmapTask implements Runnable {
@@ -95,7 +100,9 @@ public class MagicEngine {
         @Override
         public void run() {
             if (waitIfPaused(imageDownloadInfo)) {
-                Log.d(TAG, "not execute ");
+                if (DEBUG) {
+                    Log.d(TAG, " waitIfPaused imageUrl= " + imageDownloadInfo.getImageUrl());
+                }
                 return;
             }
             lock.lock();
@@ -132,14 +139,51 @@ public class MagicEngine {
         }
     }
 
+    public void tryAsyncBitmap(ImageDownloadInfo imageDownloadInfo) {
+        magic.executeInThread(new AsyncBitmapTask(imageDownloadInfo));
+    }
+
+    private class AsyncBitmapTask implements Runnable {
+        private ImageDownloadInfo imageDownloadInfo;
+
+        public AsyncBitmapTask(ImageDownloadInfo imageDownloadInfo) {
+            this.imageDownloadInfo = imageDownloadInfo;
+        }
+
+        @Override
+        public void run() {
+            final Bitmap btm = tryLoadBitmap(imageDownloadInfo);
+            final OnLoadListener mListener = imageDownloadInfo.getLoadListener();
+            if (mHander == null) {
+                mHander = new MyHandler(Looper.getMainLooper());
+            }
+            mHander.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (btm == null) {
+                        if (mListener != null) {
+                            mListener.onLoadFailed("get bitmap is null");
+                        }
+                    } else {
+                        if (mListener != null) {
+                            mListener.onLoadSucessed(btm, imageDownloadInfo.getImageUrl());
+                        }
+                    }
+                }
+
+            });
+
+        }
+    }
+
     private Bitmap tryLoadBitmap(ImageDownloadInfo imageDownloadInfo) {
         if (existsCache(imageDownloadInfo.getImageUrl())) {
-            imageDownloadInfo.setLoadedFrom(LoadedFrom.DISC_CACHE);
-            imageDownloadInfo.setDownloadType(ImageType.DIST_CACHE);
+            imageDownloadInfo.setLoadForm(LoadForm.DISC_CACHE);
+            imageDownloadInfo.setImageType(ImageType.DISC_CACHE);
         }
-        ImageDownloader mImageDownloader = DownloadUtils.getDownloader(mContext, imageDownloadInfo.getDownloadType());
-        BaseDecodeStream mImpl = new BaseDecodeStream();
-        return mImpl.decodeStream(mContext, mImageDownloader, imageDownloadInfo);
+        DownloadStream mImageDownloader = DownloadFactory.getDownloader(mContext, imageDownloadInfo.getImageType());
+        BaseDecodeStream mDecodeStream = new BaseDecodeStream();
+        return mDecodeStream.decodeStream(mContext, mImageDownloader, imageDownloadInfo);
     }
 
     private boolean existsCache(String url) {

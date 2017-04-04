@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 /**
  * Created by hong on 2016/7/12.
  */
-public interface LoadListener {
+public interface OnLoadListener {
     void onLoadStarted(String url);
 
     void onLoadSucessed(Bitmap bmp, String url);

@@ -8,5 +8,5 @@ import android.graphics.Bitmap;
  */
 
 public interface DecodeStream {
-    Bitmap decodeStream(Context mContext, ImageDownloader downloader, ImageDownloadInfo imageDownloadInfo);
+    Bitmap decodeStream(Context mContext, DownloadStream downloader, ImageDownloadInfo imageDownloadInfo);
 }

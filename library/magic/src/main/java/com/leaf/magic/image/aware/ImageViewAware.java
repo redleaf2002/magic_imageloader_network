@@ -18,7 +18,7 @@ import java.lang.reflect.Field;
 public class ImageViewAware implements ImageAware {
     private Reference<ImageView> mViewRef;
     protected boolean checkActualViewSize;
-    public int width, height;
+    private int width, height;
 
     public ImageViewAware(ImageView imageView) {
         this(imageView, true);
@@ -100,12 +100,11 @@ public class ImageViewAware implements ImageAware {
 
     public boolean setImageBitmap(Bitmap bitmap) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            ImageView imageView = (ImageView) this.mViewRef.get();
+            ImageView imageView = this.mViewRef.get();
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
                 return true;
             }
-        } else {
         }
 
         return false;
@@ -114,7 +113,7 @@ public class ImageViewAware implements ImageAware {
     @Override
     public boolean setImageResource(int resId) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            ImageView imageView = (ImageView) this.mViewRef.get();
+            ImageView imageView = this.mViewRef.get();
             if (imageView != null) {
                 imageView.setImageResource(resId);
                 return true;

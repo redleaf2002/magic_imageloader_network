@@ -5,11 +5,12 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.leaf.magic.Magic;
+import com.leaf.magic.image.aware.EmptyViewAware;
 import com.leaf.magic.image.aware.ImageAware;
 import com.leaf.magic.image.aware.ImageViewAware;
 import com.leaf.magic.image.dowload.ImageDownloadInfo;
 import com.leaf.magic.image.listener.ImageType;
-import com.leaf.magic.image.listener.LoadListener;
+import com.leaf.magic.image.listener.OnLoadListener;
 import com.leaf.magic.utils.FileUtils;
 
 
@@ -20,41 +21,34 @@ import com.leaf.magic.utils.FileUtils;
 public class ImageRequest {
 
     private Magic magic;
-    private String loadType;
-    private int extra;
-    private LoadListener loadListener;
+    private OnLoadListener loadListener;
     private int loadingImageRes;
-    private String imageUrl;
+    private String imageUrl, imageType;
     private int width, height;
+    private int extra;
     private Context mContext;
+    private boolean enableCache = true;
 
 
-    public ImageRequest(Context mContext, Magic imageLoader, String imageUrl, int resId) {
+    public ImageRequest(Context mContext, Magic imageLoader, String imageUrl, String imageType) {
         this.mContext = mContext;
         this.magic = imageLoader;
-        if (resId != 0) {
-            imageUrl = "drawable://" + String.valueOf(resId);
-        }
+        this.imageType = imageType;
         this.imageUrl = imageUrl;
     }
 
-    //for extra custom imageloader
-    public ImageRequest withType(String loadType) {
-        return this.withType(loadType, 0);
-    }
-
-    public ImageRequest withType(String loadType, int extra) {
-        this.loadType = loadType;
+    public ImageRequest addExtra(int extra) {
         this.extra = extra;
         return this;
     }
 
-    public ImageRequest addListener(LoadListener loadListener) {
+    public ImageRequest addListener(OnLoadListener loadListener) {
         this.loadListener = loadListener;
         return this;
     }
 
-    public ImageRequest reSize(int width, int height) {
+    //unit:pixels
+    public ImageRequest resetSize(int width, int height) {
         if (width < 0) {
             throw new IllegalArgumentException("Width must be positive >=0.");
         }
@@ -74,33 +68,42 @@ public class ImageRequest {
         return this;
     }
 
-    public void into(ImageView imageView) {
-        ImageAware imageAware = new ImageViewAware(imageView);
-        imageAware.resetSize(mContext, width, height);
-        if (TextUtils.isEmpty(loadType)) {
-            loadType = ImageType.DEFAULT;
-        }
-        imageUrl = checkImageUrl(imageUrl, loadType);
-        ImageDownloadInfo imageDownloadInfo = new ImageDownloadInfo(imageUrl, imageAware, loadType, loadListener, loadingImageRes, extra);
-        magic.magicEngine.tryDisplayImage(imageDownloadInfo);
+    public ImageRequest withDiscCache(boolean enableCache) {
+        this.enableCache = enableCache;
+        return this;
     }
 
-    private String checkImageUrl(String imageUrl, String loadType) {
-        if (loadType.equals(ImageType.ASSETS)) {
-            return "assets://" + imageUrl;
-        } else if (loadType.equals(ImageType.VIDEO)) {
-            return "video://" + imageUrl;
-        } else if (loadType.equals(ImageType.DEFAULT)) {
-            imageUrl = FileUtils.getPath(mContext, imageUrl);
-            if (TextUtils.isEmpty(imageUrl)) {
-                return null;
-            }
-            if (!imageUrl.startsWith("drawable://") && !imageUrl.startsWith("http://") && !imageUrl.startsWith("https://") && !imageUrl.startsWith("file://")) {
-                return "file://" + imageUrl;
-            }
-            return imageUrl;
+    public void into() {
+        into(null);
+    }
+
+    public void into(ImageView imageView) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            throw new IllegalArgumentException("ImageUrl must not be tempty.");
+        }
+        if (loadListener != null) {
+            loadListener.onLoadStarted(imageUrl);
+        }
+        if (imageView == null) {
+            ImageAware imageAware = new EmptyViewAware();
+            magic.magicEngine.tryAsyncBitmap(createImageInfo(imageAware));
+        } else {
+            ImageAware imageAware = new ImageViewAware(imageView);
+            magic.magicEngine.tryDisplayImage(createImageInfo(imageAware));
         }
 
+    }
+
+    private ImageDownloadInfo createImageInfo(ImageAware imageAware) {
+        imageAware.resetSize(mContext, width, height);
+        imageUrl = checkImageUrl(imageUrl);
+        return new ImageDownloadInfo(imageUrl, imageAware, imageType, loadListener, loadingImageRes, enableCache, extra);
+    }
+
+    private String checkImageUrl(String imageUrl) {
+        if (ImageType.FILE.equals(imageType)) {
+            imageUrl = FileUtils.getPath(mContext, imageUrl);
+        }
         return imageUrl;
     }
 }

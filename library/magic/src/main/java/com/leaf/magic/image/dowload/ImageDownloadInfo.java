@@ -1,42 +1,47 @@
 package com.leaf.magic.image.dowload;
 
 import com.leaf.magic.image.aware.ImageAware;
-import com.leaf.magic.image.listener.LoadListener;
-import com.leaf.magic.image.listener.LoadedFrom;
+import com.leaf.magic.image.listener.ImageType;
+import com.leaf.magic.image.listener.OnLoadListener;
+import com.leaf.magic.image.listener.LoadForm;
 
 /**
  * Created by hong on 2017/3/29.
  * cacheKey is just for memeory cache
- * for diskcache to use url
+ * for diskcache to use imageUrl
  */
 
 public class ImageDownloadInfo {
 
-    private String downloadType;
     private int width;
     private int height;
-    private LoadListener loadListener;
+    private OnLoadListener loadListener;
     private ImageAware imageAware;
-    private LoadedFrom loadedFrom;
+    private boolean enableCache = true;
+    private LoadForm loadForm;
     private int extraInfo;
     private String memoryCacheKey;
     private int loadingImageRes;
-    private String imageUrl;
+    private String imageUrl, imageType;
 
-    public ImageDownloadInfo(String imageUrl, ImageAware imageAware, String downloadType, LoadListener loadListener, int loadingImageRes, int extraInfo) {
+    public ImageDownloadInfo(String imageUrl, ImageAware imageAware, String imageType, OnLoadListener loadListener, int loadingImageRes, boolean enableCache, int extraInfo) {
         this.imageUrl = imageUrl;
         this.width = imageAware.getWidth();
         this.height = imageAware.getHeight();
-        this.downloadType = downloadType;
+        this.imageType = imageType;
         this.loadingImageRes = loadingImageRes;
         this.loadListener = loadListener;
         this.imageAware = imageAware;
         this.extraInfo = extraInfo;
         this.memoryCacheKey = generateKey(imageUrl, width, height);
+        this.enableCache = enableCache;
     }
 
     private final String generateKey(String imageUri, int width, int height) {
-        return imageUri + "_" + width + "x" + height + "_" + extraInfo;
+        if (ImageType.VIDEO.equals(imageType)) {
+            return imageUri + "_" + width + "x" + height + "_" + extraInfo;
+        }
+        return imageUri + "_" + width + "x" + height;
     }
 
     public int getSampleSize(int bmtWidth, int bmtHeight) {
@@ -74,12 +79,12 @@ public class ImageDownloadInfo {
         this.imageUrl = imageUrl;
     }
 
-    public String getDownloadType() {
-        return downloadType;
+    public String getImageType() {
+        return imageType;
     }
 
-    public void setDownloadType(String downloadType) {
-        this.downloadType = downloadType;
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
     }
 
     public int getWidth() {
@@ -98,11 +103,11 @@ public class ImageDownloadInfo {
         this.height = height;
     }
 
-    public LoadListener getLoadListener() {
+    public OnLoadListener getLoadListener() {
         return loadListener;
     }
 
-    public void setLoadListener(LoadListener loadListener) {
+    public void setLoadListener(OnLoadListener loadListener) {
         this.loadListener = loadListener;
     }
 
@@ -114,20 +119,28 @@ public class ImageDownloadInfo {
         this.imageAware = imageAware;
     }
 
-    public LoadedFrom getLoadedFrom() {
-        return loadedFrom;
-    }
-
-    public void setLoadedFrom(LoadedFrom loadedFrom) {
-        this.loadedFrom = loadedFrom;
-    }
-
     public int getExtraInfo() {
         return extraInfo;
     }
 
     public void setExtraInfo(int extraInfo) {
         this.extraInfo = extraInfo;
+    }
+
+    public boolean isEnableCache() {
+        return enableCache;
+    }
+
+    public void setEnableCache(boolean enableCache) {
+        this.enableCache = enableCache;
+    }
+
+    public LoadForm getLoadForm() {
+        return loadForm;
+    }
+
+    public void setLoadForm(LoadForm loadForm) {
+        this.loadForm = loadForm;
     }
 
 }

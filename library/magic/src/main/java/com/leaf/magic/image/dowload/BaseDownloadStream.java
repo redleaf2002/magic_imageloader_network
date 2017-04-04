@@ -3,14 +3,15 @@ package com.leaf.magic.image.dowload;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 
-import com.leaf.magic.image.dowload.ImageDownloadInfo;
-import com.leaf.magic.image.dowload.ImageDownloader;
-import com.leaf.magic.image.listener.LoadedFrom;
-import com.leaf.magic.image.listener.Scheme;
+import com.leaf.magic.image.cache.DiskManager;
+import com.leaf.magic.image.listener.ImageType;
+import com.leaf.magic.image.listener.LoadForm;
 import com.leaf.magic.utils.IoUtils;
 
 import java.io.ByteArrayInputStream;
@@ -27,20 +28,20 @@ import java.net.URL;
  * Created by hong on 2017/3/20.
  */
 
-public class BaseImageDownloader implements ImageDownloader {
+public class BaseDownloadStream implements DownloadStream {
 
     protected final Context context;
     protected final int connectTimeout;
     protected final int readTimeout;
 
-    public BaseImageDownloader(Context context) {
+    public BaseDownloadStream(Context context) {
 
         this.context = context;
         this.connectTimeout = 5000;
         this.readTimeout = 20000;
     }
 
-    public BaseImageDownloader(Context context, int connectTimeout, int readTimeout) {
+    public BaseDownloadStream(Context context, int connectTimeout, int readTimeout) {
         this.context = context;
         this.connectTimeout = connectTimeout;
         this.readTimeout = readTimeout;
@@ -49,28 +50,38 @@ public class BaseImageDownloader implements ImageDownloader {
     @Override
     public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
         String imageUrl = imageDownloadInfo.getImageUrl();
+        String loadType = imageDownloadInfo.getImageType();
         try {
-            switch (Scheme.getUrl(imageUrl)) {
-            case HTTP:
-            case HTTPS:
-                imageDownloadInfo.setLoadedFrom(LoadedFrom.NETWORK);
+            if (ImageType.HTTP.equals(loadType)) {
+                imageDownloadInfo.setLoadForm(LoadForm.NETWORK);
                 return getStreamFromNetwork(imageUrl, null);
-            case FILE:
-                imageDownloadInfo.setLoadedFrom(LoadedFrom.FILE_LOCAL);
-                return getStreamFromFile(imageUrl);
-            case DRAWABLE:
-                imageDownloadInfo.setLoadedFrom(LoadedFrom.FILE_LOCAL);
+            } else if (ImageType.DRAWABLE.equals(loadType)) {
+                imageDownloadInfo.setLoadForm(LoadForm.LOCAL_FILE);
                 return getStreamFromDrawable(imageUrl);
+            } else if (ImageType.FILE.equals(loadType)) {
+                imageDownloadInfo.setLoadForm(LoadForm.LOCAL_FILE);
+                return getStreamFromFile(imageUrl);
+            } else if (ImageType.DISC_CACHE.equals(loadType)) {
+                imageDownloadInfo.setLoadForm(LoadForm.LOCAL_FILE);
+                return getStreamFromDisc(imageUrl);
+            } else if (ImageType.ASSETS.equals(loadType)) {
+                imageDownloadInfo.setLoadForm(LoadForm.LOCAL_FILE);
+                return getStreamFromAssets(imageUrl);
+            } else if (ImageType.VIDEO.equals(loadType)) {
+                imageDownloadInfo.setLoadForm(LoadForm.NETWORK);
+                return getStreamFromVideo(imageDownloadInfo);
             }
+
+
         } catch (IOException e) {
         }
         return null;
+
     }
 
     protected InputStream getStreamFromFile(String pathUrl) {
-        String filePath = Scheme.FILE.crop(pathUrl);
         try {
-            return new FileInputStream(new File(filePath));
+            return new FileInputStream(new File(pathUrl));
         } catch (FileNotFoundException e) {
         }
         return null;
@@ -98,9 +109,8 @@ public class BaseImageDownloader implements ImageDownloader {
     }
 
     protected InputStream getStreamFromDrawable(String imageUri) {
-        String drawableIdString = Scheme.DRAWABLE.crop(imageUri);
         try {
-            int drawableId = Integer.parseInt(drawableIdString);
+            int drawableId = Integer.parseInt(imageUri);
             BitmapDrawable drawable = (BitmapDrawable) this.context.getResources().getDrawable(drawableId);
             Bitmap bitmap = drawable.getBitmap();
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -112,5 +122,28 @@ public class BaseImageDownloader implements ImageDownloader {
         return null;
     }
 
+
+    private InputStream getStreamFromDisc(String imageUrl) {
+        return DiskManager.with(context).getStream(imageUrl);
+    }
+
+    private InputStream getStreamFromAssets(String imageUri) throws IOException {
+        return this.context.getAssets().open(imageUri);
+    }
+
+    private InputStream getStreamFromVideo(ImageDownloadInfo imageDownloadInfo) throws IOException {
+        try {
+            if (imageDownloadInfo.getExtraInfo() < MediaStore.Images.Thumbnails.MINI_KIND || imageDownloadInfo.getExtraInfo() > MediaStore.Video.Thumbnails.MICRO_KIND) {
+                imageDownloadInfo.setExtraInfo(MediaStore.Images.Thumbnails.MINI_KIND);
+            }
+            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(imageDownloadInfo.getImageUrl(), imageDownloadInfo.getExtraInfo());
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, os);
+            return new ByteArrayInputStream(os.toByteArray());
+        } catch (Exception e) {
+            Log.e("error", "e: " + e.toString());
+        }
+        return null;
+    }
 
 }

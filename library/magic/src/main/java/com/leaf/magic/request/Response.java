@@ -6,10 +6,10 @@ package com.leaf.magic.request;
 
 public class Response {
     public interface Listener<T> {
-        void onResponse(T var1);
+        void onResponse(T response);
     }
 
     public interface ErrorResponse<T> {
-        void onErrorResponse(String var1);
+        void onErrorResponse(String error);
     }
 }
