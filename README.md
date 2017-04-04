@@ -60,7 +60,7 @@ Image cache in memory and disk
      
    #### customize a load mode:
      Firstly instantiate the DownloadStream
-  
+   ```java
      private void customizeLoader(){
         Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
          @Override
@@ -76,11 +76,12 @@ Image cache in memory and disk
         //And then:
         String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
         Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
-     }   
+     } 
+    ```
  
     ### AsyncImage loading
     very easy :
-     ```Java 
+    ```Java 
      private void asyncLoad(){
        String url ="http://images.allfreedownload.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
        Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
@@ -107,7 +108,7 @@ Image cache in memory and disk
    with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
    #### get:
-    ```java
+   ```java
     private void beginRequest() {
         String url = "url...";
         JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, url, null, 
@@ -136,10 +137,11 @@ Image cache in memory and disk
         Magic.with(MainActivity.this).addRequest(mRequest);
     }
    }
-    ```
+   ```
    ### Post:
     
-    private void beginPostRequest() {
+   ```Java 
+   private void beginPostRequest() {
       String requestBody = "requestbody";
       JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.POST, url, requestBody, new   Response.Listener<JSONObject>() {
         public void onResponse(JSONObject object) {
@@ -164,3 +166,4 @@ Image cache in memory and disk
     };
     Magic.with(MainActivity.this).addRequest(mRequest);
     }
+   ```
