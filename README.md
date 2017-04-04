@@ -36,7 +36,7 @@ Image cache in memory and disk
  
 
   #### With the listener
-     onLoadListener
+    onLoadListener
     ```Java
       private void load(Context mContext, ImageView imageView, String url) {
            Magic.with(mContext).loadImage(url,ImageType.HTTP).addListener(new OnLoadListener() {
