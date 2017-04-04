@@ -9,24 +9,24 @@ Image cache in memory and disk
 
 ## Usage:
    
-   ### 1.for Imageloader
+### 1.for Imageloader
     ImageType:  HTTP FILE DRAWABLE ASSETS VIDEO
   
-    #### HTTP
+  #### HTTP
     String url = "http://images.all-free-download.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
     Magic.with(MainActivity.this).loadImage(url, ImageType.HTTP).into(mImageView);
     
-    #### FILE:
+  #### FILE:
     String filePath = "/storage/emulated/0/gnowwp/resized/london_night.png";
     Magic.with(MainActivity.this).loadImage(filePath, ImageType.FILE).into(mImageView);
 
-    #### DRAWABLE:
+  #### DRAWABLE:
     Magic.with(MainActivity.this).loadImage(R.drawable.beautiful_natural).into(mImageView);
 
-    #### ASSETS:
+  #### ASSETS:
     Magic.with(MainActivity.this).loadImage("beautiful_natural.jpg", ImageType.ASSETS).into(mImageView);
    
-    #### VIDEO thumbnail:
+  #### VIDEO thumbnail:
     have 3 mode:     MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
                      MediaStore.Images.Thumbnails.MICRO_KIND
                      MediaStore.Images.Thumbnails.MINI_KIND
@@ -35,9 +35,9 @@ Image cache in memory and disk
     Magic.with(MainActivity.this).loadImage(videoUrl,ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)     .into(mImageVie
  
 
-     #### With the listener
+   #### With the listener
      onLoadListener
-     ```Java
+   ```Java
      private void load(Context mContext, ImageView imageView, String url) {
            Magic.with(mContext).loadImage(url,ImageType.HTTP).addListener(new OnLoadListener() {
                @Override
@@ -56,9 +56,9 @@ Image cache in memory and disk
                }
            }).into(imageView);
        }
-       ```
+   ```
      
-     #### customize a load mode:
+   #### customize a load mode:
      Firstly instantiate the DownloadStream
   
      private void customizeLoader(){
@@ -106,7 +106,7 @@ Image cache in memory and disk
    ### 2.for network request 
    with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
-    #### get:
+   #### get:
     ```java
     private void beginRequest() {
         String url = "url...";
@@ -137,7 +137,7 @@ Image cache in memory and disk
     }
    }
     ```
-    ### Post:
+   ### Post:
     
     private void beginPostRequest() {
       String requestBody = "requestbody";
