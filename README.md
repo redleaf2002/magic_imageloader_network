@@ -12,7 +12,7 @@ Image cache in memory and disk
    ### 1.for Imageloader
     ImageType:  HTTP FILE DRAWABLE ASSETS VIDEO
   
-    #### HTTP:
+    #### HTTP
     String url = "http://images.all-free-download.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
     Magic.with(MainActivity.this).loadImage(url, ImageType.HTTP).into(mImageView);
     
@@ -136,9 +136,8 @@ Image cache in memory and disk
     }
    }
     ```
-    #### Post:
+    ### Post:
     
-    ```java
     private void beginPostRequest() {
       String requestBody = "requestbody";
       JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.POST, url, requestBody, new   Response.Listener<JSONObject>() {
@@ -164,4 +163,3 @@ Image cache in memory and disk
     };
     Magic.with(MainActivity.this).addRequest(mRequest);
     }
-   ```
