@@ -1,5 +1,8 @@
 # magic_network
-for image loader and network request
+
+This Android library Magic_network on GitHub.  aims to provide a flexible instrument for loading image and network request.
+For loading image ,it supports http, drawable, assets,video thumbnail and local file.It also supports to customize the mode of loading image.
+For network request , it provides JsonObjectRequest JsonArrayRequest StringRequest InputstreamRequest.
 
 
 Simple
