@@ -4,6 +4,8 @@ This Android library Magic_network on GitHub.  aims to provide a flexible instru
 For loading image ,it supports http, drawable, assets,video thumbnail and local file.It also supports to customize the mode of loading image.
 For network request , it provides JsonObjectRequest JsonArrayRequest StringRequest InputstreamRequest.
 
+## Features
+Image cache in memory and disk
 
 ## Usage:
    
@@ -28,12 +30,13 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
     have 3 thumbnails:MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
                      MediaStore.Images.Thumbnails.MICRO_KIND
                      MediaStore.Images.Thumbnails.MINI_KIND
+    ```java
     String videoUrl = "/storage/emulated/0/DCIM/Camera/VID_20160711_113933.mp4";
     Magic.with(MainActivity.this).loadImage(videoUrl,        ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND).into(mImageVie
-
+    ```
 
    #### With the listener
-   
+   ```java
    Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
                     @Override
                     public void onLoadStarted(String url) {
@@ -51,7 +54,7 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
                     }
                 }).into(mView);
      
-     
+     ```
      #### customize a load mode:
      ```java
      Firstly instantiate the DownloadStream
@@ -70,14 +73,38 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
      String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
      Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
      ```
+    ### AsyncImage loading
+    very easy :
+     ```java 
+     String url = "http://images.all-freedownload.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
+     Magic.with(mContext).loadImage(url).addListener(new LoadListener() {
+                    @Override
+                    public void onLoadStarted(String url) {
+                        Log.d(TAG, "onLoadStarted");
+                    }
+
+                    @Override
+                    public void onLoadSucessed(Bitmap bmp, String url) {
+                        Log.d(TAG, "onLoadSucessed");
+                    }
+
+                    @Override
+                    public void onLoadFailed(String error) {
+                        Log.d(TAG, "onLoadFailed");
+                    }
+                }).into();
+     //or
+    .into(null);
+    ```
+     
     ### 2.for network request with JsonobjectRequest JsonArrayRequest StringRequest FileRequest
     
     #### get:
-    
     ```java
     private void beginRequest() {
         String url = "url...";
-        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>()                     {
+        JsonObjectRequest mRequest = new JsonObjectRequest(Request.Method.GET, url, null, 
+        new Response.Listener<JSONObject>()                     {
             @Override
             public void onResponse(JSONObject var1) {
                 if (var1 != null) {
@@ -101,9 +128,10 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
         };
         Magic.with(MainActivity.this).addRequest(mRequest);
     }
+   }
     ```
-    
     #### Post:
+    
     ```java
     private void beginPostRequest() {
       String requestBody = "requestbody";
@@ -131,16 +159,4 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
     Magic.with(MainActivity.this).addRequest(mRequest);
    }
    ```
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
