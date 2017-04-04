@@ -35,26 +35,28 @@ Image cache in memory and disk
     Magic.with(MainActivity.this).loadImage(videoUrl,ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)     .into(mImageVie
  
 
-   #### With the listener
-   onLoadListener
-   private void load(){
-       Magic.with(mContext).loadImage(url).addListener(new OnLoadListener() {
-                    @Override
-                    public void onLoadStarted(String url) {
-                        Log.d(TAG, "onLoadStarted");
-                    }
+     #### With the listener
+     onLoadListener
+     ```Java
+     private void load(Context mContext, ImageView imageView, String url) {
+           Magic.with(mContext).loadImage(url,ImageType.HTTP).addListener(new OnLoadListener() {
+               @Override
+               public void onLoadStarted(String url) {
+                   Log.d(TAG, "onLoadStarted");
+               }
 
-                    @Override
-                    public void onLoadSucessed(Bitmap bmp, String url) {
-                        Log.d(TAG, "onLoadSucessed");
-                    }
+               @Override
+               public void onLoadSucessed(Bitmap bmp, String url) {
+                   Log.d(TAG, "onLoadSucessed");
+               }
 
-                    @Override
-                    public void onLoadFailed(String error) {
-                        Log.d(TAG, "onLoadFailed");
-                    }
-                }).into(mView);
-     }
+               @Override
+               public void onLoadFailed(String error) {
+                   Log.d(TAG, "onLoadFailed");
+               }
+           }).into(imageView);
+       }
+       ```
      
      #### customize a load mode:
      Firstly instantiate the DownloadStream
