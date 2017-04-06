@@ -7,6 +7,21 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
 ## Features
 Image cache in memory and disk
 
+## Add magicnetwork to your project
+Place magicnetwork.jar into the libs of your project. Get the jar from the directory 'downloads'
+
+Gradle:
+compile 'com.leaf:magicnetwork:1.0.1'
+
+Maven
+<dependency>
+  <groupId>com.leaf</groupId>
+  <artifactId>magicnetwork</artifactId>
+  <version>1.0.1</version>
+  <type>pom</type>
+</dependency>
+
+
 ## Usage:
    
 ### 1.for Imageloader
@@ -166,3 +181,4 @@ Image cache in memory and disk
     Magic.with(MainActivity.this).addRequest(mRequest);
     }
    ```
+
