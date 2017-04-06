@@ -33,6 +33,9 @@ compile 'com.leaf:magicnetwork:1.0.1'
 ## Usage:
    
 ### 1.for Imageloader
+
+    support to load image from network  and local file
+    
     ImageType:  HTTP FILE DRAWABLE ASSETS VIDEO
   
   #### HTTP
