@@ -5,16 +5,22 @@ For loading image ,it supports http, drawable, assets,video thumbnail and local 
 For network request , it provides JsonObjectRequest JsonArrayRequest StringRequest InputstreamRequest.
 
 ## Features
-Image cache in memory and disk
+1. is Fast
+2. is tiny (72kb jar)
+3. memory and disk cache
+4. customize the load style
 
 ## Add magicnetwork to your project
+
 ### magicnetwork.jar 
 Place magicnetwork.jar into the libs of your project. Get the jar from the directory 'downloads'
 
 ### Gradle:
+
 compile 'com.leaf:magicnetwork:1.0.1'
 
 ### Maven
+
 <dependency>
   <groupId>com.leaf</groupId>
   <artifactId>magicnetwork</artifactId>
