@@ -8,12 +8,13 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
 Image cache in memory and disk
 
 ## Add magicnetwork to your project
+### magicnetwork.jar 
 Place magicnetwork.jar into the libs of your project. Get the jar from the directory 'downloads'
 
-Gradle:
+### Gradle:
 compile 'com.leaf:magicnetwork:1.0.1'
 
-Maven
+### Maven
 <dependency>
   <groupId>com.leaf</groupId>
   <artifactId>magicnetwork</artifactId>
