@@ -17,7 +17,6 @@ import com.leaf.magic.request.Response;
 import com.leaf.magic.request.factory.JsonObjectRequest;
 
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +34,6 @@ public class MainActivity extends Activity {
         imageBnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                 Magic.with(MainActivity.this).loadImage(url, ImageType.HTTP).addListener(new OnLoadListener() {
                     @Override
                     public void onLoadStarted(String url) {
@@ -45,7 +42,7 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onLoadSucessed(Bitmap bmp, String url) {
-                        Log.d(TAG, "onLoadSucessed");
+                        Log.d(TAG, "onLoadSucessed url:"+url);
                     }
 
                     @Override
