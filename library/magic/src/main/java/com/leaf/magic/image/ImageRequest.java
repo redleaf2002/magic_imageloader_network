@@ -30,9 +30,9 @@ public class ImageRequest {
     private boolean enableCache = true;
 
 
-    public ImageRequest(Context mContext, Magic imageLoader, String imageUrl, String imageType) {
+    public ImageRequest(Context mContext, Magic magic, String imageUrl, String imageType) {
         this.mContext = mContext;
-        this.magic = imageLoader;
+        this.magic = magic;
         this.imageType = imageType;
         this.imageUrl = imageUrl;
     }

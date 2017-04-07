@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 public class Magic {
     public static final boolean DEBUG = true;
     public static final String TAG = "Magic";
-    private static Magic mImageLoader = null;
+    private static Magic magic = null;
     private final static Object object = new Object();
     private ExecutorService mExecutor;
     private Context mContext;
@@ -34,14 +34,14 @@ public class Magic {
     }
 
     public static Magic with(Context mContext) {
-        if (mImageLoader == null) {
+        if (magic == null) {
             synchronized (object) {
-                if (mImageLoader == null) {
-                    mImageLoader = new Magic(mContext);
+                if (magic == null) {
+                    magic = new Magic(mContext);
                 }
             }
         }
-        return mImageLoader;
+        return magic;
     }
 
     public ImageRequest loadImage(String imageUrl, String imageType) {
