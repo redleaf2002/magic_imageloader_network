@@ -1,6 +1,6 @@
 # magic_network
 
-[中文Readme(Zh_cn)](https://github.com/redleaf2002/magic_imageloader_network/blob/master/README_中文.md)
+[中文Readme(Zh_cn)](https://github.com/redleaf2002/magic_imageloader_network/README_Zh_cn.md)
 
 This Android library Magic_network on GitHub.  aims to provide a flexible instrument for loading image and network request.
 For loading image ,it supports http, drawable, assets,video thumbnail and local file.It also supports to customize the mode of loading image.
