@@ -3,7 +3,8 @@
 这个框架提供了一个简单方便的图片加载的方式和网络请求。集合和扩展了universal-imageloader和volley两个框架
 
 图片加载：支持网络 本地文件和视频缩略图 图片的形式：http drawable assets video_thumbnail
-同时也支持自定义的加载图片的方法 同样支持内存缓存和文件缓存
+也支持自定义的加载图片的方法 同样支持内存缓存和文件缓存
+
 
 网络请求：支持sonObjectRequest JsonArrayRequest StringRequest InputstreamRequest 使用比较简单方便
 
@@ -11,22 +12,24 @@
 1. 快速 方便
 2. 整个框架比较小 (72kb jar)
 3. 支持内存缓存和文件缓存
-4. 自定义加载方式 
+4. 自定义加载方式
+5. 根据图片和imageview的大小决定bitmap加载的大小 有效的防止oom
+
 
 ## 加入在自己的项目中有下面三种方式
 
-### 直接使用jar包magicnetwork.jar 
+### 1.直接使用jar包magicnetwork.jar 
 ```java
 把downloads目录下的jar包放入项目的libs下面
 ```
 
-### Gradle:
+### 2.Gradle:
 使用android studio开发的 直接在build.gradle中加入下面一行代码
 ```java
 compile 'com.leaf:magicnetwork:1.0.1'
 ```
 
-### Maven
+### 3.Maven
 ```java
 <dependency>
   <groupId>com.leaf</groupId>
@@ -111,7 +114,7 @@ compile 'com.leaf:magicnetwork:1.0.1'
        } 
    ```
  
- ### 异步加载 不需要imageview去实现 只是加载图片获取bitmap
+ ### 异步加载 不需要imageview去显示 只是获取图片的bitmap
       和上面加载到imageview的方式几乎相同 只是into(null)活着into():
    ```Java 
       private void asyncLoad(){
