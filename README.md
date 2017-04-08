@@ -15,8 +15,9 @@ For network request , it provides JsonObjectRequest JsonArrayRequest StringReque
 ## Add magicnetwork to your project
 
 ### magicnetwork.jar 
+```java
 Place magicnetwork.jar into the libs of your project. Get the jar from the directory 'downloads'
-
+```
 ### Gradle:
 ```java
 compile 'com.leaf:magicnetwork:1.0.1'
@@ -42,17 +43,17 @@ compile 'com.leaf:magicnetwork:1.0.1'
   
   #### HTTP
     String url = "http://images.all-free-download.com/images/graphiclarge/beautiful_natural_scenery_01_hd_picture_166232.jpg";
-    Magic.with(MainActivity.this).loadImage(url, ImageType.HTTP).into(mImageView);
+    Magic.with(mContext).loadImage(url, ImageType.HTTP).into(mImageView);
     
   #### FILE:
     String filePath = "/storage/emulated/0/gnowwp/resized/london_night.png";
-    Magic.with(MainActivity.this).loadImage(filePath, ImageType.FILE).into(mImageView);
+    Magic.with(mContext).loadImage(filePath, ImageType.FILE).into(mImageView);
 
   #### DRAWABLE:
-    Magic.with(MainActivity.this).loadImage(R.drawable.beautiful_natural).into(mImageView);
+    Magic.with(mContext).loadImage(R.drawable.beautiful_natural).into(mImageView);
 
   #### ASSETS:
-    Magic.with(MainActivity.this).loadImage("beautiful_natural.jpg", ImageType.ASSETS).into(mImageView);
+    Magic.with(mContext).loadImage("beautiful_natural.jpg", ImageType.ASSETS).into(mImageView);
    
   #### VIDEO thumbnail:
     have 3 mode:     MediaStore.Images.Thumbnails.FULL_SCREEN_KIND
@@ -60,7 +61,7 @@ compile 'com.leaf:magicnetwork:1.0.1'
                      MediaStore.Images.Thumbnails.MINI_KIND
     
     String videoUrl = "/storage/emulated/0/DCIM/Camera/VID_20160711_113933.mp4";
-    Magic.with(MainActivity.this).loadImage(videoUrl,ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)     .into(mImageVie
+    Magic.with(mContext).loadImage(videoUrl,ImageType.VIDEO).addExtra(MediaStore.Images.Thumbnails.FULL_SCREEN_KIND)     .into(mImageVie
  
 
   #### With the listener
@@ -89,7 +90,7 @@ compile 'com.leaf:magicnetwork:1.0.1'
    Firstly instantiate the DownloadStream
    ```Java
       private void customizeLoader(){
-          Magic.with(MainActivity.this).addStreamType("new_type", new DownloadStream() {
+          Magic.with(mContext).addStreamType("new_type", new DownloadStream() {
           @Override
              public InputStream getStream(ImageDownloadInfo imageDownloadInfo) {
            try {
@@ -99,14 +100,16 @@ compile 'com.leaf:magicnetwork:1.0.1'
            return null;
           }
          });
-
-         //And then:
+   ```
+   
+  And then:
+  ```java
          String newPath = "/storage/emulated/0/gnowwp/resized/london_night.png";
          Magic.with(MainActivity.this).loadImage(newPath, "new_type").into(mImageView);
        } 
    ```
  
- ### AsyncImage loading
+ ### Asynchronous download image 
       very easy :
    ```Java 
       private void asyncLoad(){
